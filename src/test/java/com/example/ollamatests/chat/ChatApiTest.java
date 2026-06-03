@@ -20,6 +20,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.text.IsEmptyString.emptyString;
 
+@Tag("regression")
 class ChatApiTest extends BaseTest {
 
     private static final Map<String, Object> DETERMINISTIC_OPTIONS = Map.of(

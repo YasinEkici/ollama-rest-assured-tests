@@ -5,6 +5,7 @@ import com.example.ollamatests.client.Endpoints;
 import com.example.ollamatests.config.TestConfig;
 import com.example.ollamatests.model.generate.GenerateRequest;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
@@ -15,6 +16,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.text.IsEmptyString.emptyString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("regression")
 class GenerateNegativeTest extends BaseTest {
 
     private static final Map<String, Object> DETERMINISTIC_OPTIONS = Map.of(

@@ -21,6 +21,7 @@ import static org.hamcrest.text.IsEmptyString.emptyString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Tag("regression")
 class GenerateApiTest extends BaseTest {
 
     private static final Map<String, Object> DETERMINISTIC_OPTIONS = Map.of(

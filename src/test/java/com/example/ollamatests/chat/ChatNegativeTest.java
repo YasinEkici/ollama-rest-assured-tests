@@ -6,6 +6,7 @@ import com.example.ollamatests.config.TestConfig;
 import com.example.ollamatests.model.chat.ChatRequest;
 import com.example.ollamatests.model.chat.Message;
 import io.restassured.response.Response;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,6 +18,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.text.IsEmptyString.emptyString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Tag("regression")
 class ChatNegativeTest extends BaseTest {
 
     private static final Map<String, Object> DETERMINISTIC_OPTIONS = Map.of(
