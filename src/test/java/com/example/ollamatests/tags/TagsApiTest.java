@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@Tag("regression")
 class TagsApiTest extends BaseTest {
 
     @Test
