@@ -49,19 +49,21 @@ If a task touches anything on this list, stop and ask before proceeding. Do not 
 
 For any non-trivial task:
 
-1. Read `project_structure.md` and `project_plan.md` end to end.
-2. Identify which phase in `project_plan.md` the task belongs to.
-3. Before editing, summarize:
-   - the task goal,
-   - the files to be created or changed,
-   - the acceptance criteria from the relevant phase,
-   - any deviation from the plan (if proposed).
-4. Wait for user approval if the task is broad, affects multiple phases, or proposes a deviation.
-5. Implement only the current phase. Do not pull work forward from later phases.
-6. Run `mvn clean test` (or the relevant filtered command) and report the result.
-7. At the end of each phase, stop at the checkpoint defined in `project_plan.md` and wait for user review before continuing to the next phase.
-8. Update `README.md` only in Phase 6 unless the user explicitly requests an earlier update.
-
+1. Read AGENTS.md, project_structure.md, and the relevant phase in 
+   project_plan.md end to end.
+2. Before editing any file, post a written pre-flight summary covering:
+   1. Task goal (one paragraph).
+   2. Constraints identified from AGENTS.md and the plan.
+   3. Files to create or modify (full paths, in implementation order).
+   4. Risks and design ambiguities.
+   5. Validation commands you intend to run and expected output.
+   6. Acceptance criteria from the phase's "Definition of done".
+3. Wait for explicit user approval before editing files, running commands 
+   beyond read-only repo inspection, or adding dependencies.
+4. Implement only the current phase. Do not pull work forward.
+5. Run the validation commands and report results.
+6. At the phase checkpoint, stop and wait for user review.
+7. In the final report, list any deviations from the pre-flight summary.
 ## When in doubt
 
 - Prefer the option that is simpler, more readable, and closer to the documented plan.
