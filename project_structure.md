@@ -34,27 +34,25 @@ ollama-api-tests/
 │   └── screenshots/                   # Images for README / presentation
 │
 ├── src/
-│   ├── main/java/com/example/ollamatests/
-│   │   ├── client/
-│   │   │   ├── Endpoints.java         # Endpoint path constants
-│   │   │   └── OllamaSpecs.java       # Request/Response Specification factory
-│   │   ├── config/
-│   │   │   └── TestConfig.java        # Env + properties loader (BASE_URL, MODEL, TIMEOUT)
-│   │   └── model/
-│   │       ├── generate/
-│   │       │   ├── GenerateRequest.java
-│   │       │   └── GenerateResponse.java
-│   │       ├── chat/
-│   │       │   ├── ChatRequest.java
-│   │       │   ├── ChatResponse.java
-│   │       │   └── Message.java
-│   │       └── tags/
-│   │           ├── TagsResponse.java
-│   │           └── ModelInfo.java
-│   │
 │   └── test/
 │       ├── java/com/example/ollamatests/
 │       │   ├── BaseTest.java          # @BeforeAll lifecycle, RestAssured global config
+│       │   ├── client/
+│       │   │   ├── Endpoints.java     # Endpoint path constants
+│       │   │   └── OllamaSpecs.java   # Request/Response Specification factory
+│       │   ├── config/
+│       │   │   └── TestConfig.java    # Env + properties loader (BASE_URL, MODEL, TIMEOUT)
+│       │   ├── model/
+│       │   │   ├── generate/
+│       │   │   │   ├── GenerateRequest.java
+│       │   │   │   └── GenerateResponse.java
+│       │   │   ├── chat/
+│       │   │   │   ├── ChatRequest.java
+│       │   │   │   ├── ChatResponse.java
+│       │   │   │   └── Message.java
+│       │   │   └── tags/
+│       │   │       ├── TagsResponse.java
+│       │   │       └── ModelInfo.java
 │       │   ├── tags/
 │       │   │   └── TagsApiTest.java   # GET /api/tags
 │       │   ├── generate/
@@ -76,16 +74,16 @@ ollama-api-tests/
 
 ## 3. Layer Responsibilities
 
-### `src/main` — Test Infrastructure (Production Code)
+### `src/test` — Test Suite Code
 
-Helper infrastructure lives under `main` so that test classes stay focused on the given-when-then flow. This is a Rest Assured best practice: setup details are pushed into reusable utilities, and tests read like specifications.
+This repository is a single-module API test suite, not an application with separate production code. Helper infrastructure lives under `src/test/java` so Rest Assured can remain a test-scoped Maven dependency while test classes stay focused on the given-when-then flow.
 
 - **`client/Endpoints.java`** — String constants for `/api/tags`, `/api/generate`, `/api/chat`. Keeps endpoint paths out of test bodies.
 - **`client/OllamaSpecs.java`** — Factory methods for `RequestSpecification` and `ResponseSpecification`. Centralizes base URI, content type, and default timeout configuration.
 - **`config/TestConfig.java`** — Configuration loader. Precedence: system property → environment variable → `test-config.properties` → hardcoded default. No raw `localhost:11434` strings in test code.
 - **`model/*`** — POJOs for request and response bodies. Jackson handles serialization both ways; mismatched field names fail at compile time rather than at runtime.
 
-### `src/test` — Test Code
+### Endpoint Tests And Resources
 
 - **`BaseTest.java`** — Common parent class. `@BeforeAll` initializes Rest Assured globals (base URI, request/response specs). All test classes extend this.
 - **One package per endpoint** — `tags/`, `generate/`, `chat/`. Positive and negative scenarios live in separate test classes so that a single file never balloons.

@@ -41,7 +41,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
             <version>${jackson.version}</version>
-            <!-- Scope is compile because POJOs are in src/main/java -->
         </dependency>
 
         <!-- Hamcrest -->
