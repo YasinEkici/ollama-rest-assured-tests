@@ -15,7 +15,7 @@ For the assignment requirements, see `docs/assignment.md`
 - Use `mvn` for all build and test commands. Do not introduce Gradle.
 - Java 17 is the baseline. Do not raise or lower the language level.
 - Pinned dependency versions (do not bump without approval): Rest Assured `5.5.7`, JUnit Jupiter `5.11.3`, Jackson Databind `2.18.2`, Hamcrest `3.0`, Maven Surefire Plugin `3.5.2`.
-- Keep helper infrastructure (specs, config, POJOs, endpoint constants) under `src/main/java/com/example/ollamatests/`. Test classes go under `src/test/java/...`.
+- Keep helper infrastructure (specs, config, POJOs, endpoint constants) under `src/test/java/com/example/ollamatests/`. This project is a single-module API test suite, so Rest Assured infrastructure remains test-scoped.
 - Do not hardcode the base URL, model name, or timeouts. All configuration flows through `TestConfig` (env var → properties file → default).
 - Do not commit build artifacts, IDE folders, or local logs. `.gitignore` must cover `target/`, `.idea/`, `*.iml`, `.vscode/`.
 - The target service is the local Ollama API at `http://localhost:11434`. The chosen test model is `qwen2.5:0.5b` for speed; do not switch models without updating `test-config.properties`.
