@@ -38,7 +38,7 @@ class GenerateNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.GENERATE);
 
-        System.out.printf("invalidModel status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("invalidModel status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(404, response.statusCode());
         response.then()
@@ -60,7 +60,7 @@ class GenerateNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.GENERATE);
 
-        System.out.printf("emptyPrompt status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("emptyPrompt status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(200, response.statusCode());
         response.then()
@@ -75,7 +75,7 @@ class GenerateNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.GENERATE);
 
-        System.out.printf("malformedJson status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("malformedJson status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(400, response.statusCode());
         response.then()

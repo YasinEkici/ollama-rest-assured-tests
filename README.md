@@ -1,83 +1,75 @@
-# Ollama API Regression Test Automation
+# 🤖 Ollama API Regression Test Automation
 
-## About
+![Java 17](https://img.shields.io/badge/Java-17-blue.svg)
+![Maven](https://img.shields.io/badge/Maven-3.9+-C71A36.svg)
+![JUnit 5](https://img.shields.io/badge/JUnit-5.11.3-25A162.svg)
+![Rest Assured](https://img.shields.io/badge/Rest_Assured-5.5.7-43B02A.svg)
 
-Bu proje, Yazılım Test Mühendisliği dersi için hazırlanmış bir otomatik API regresyon test projesidir. Java 17, Maven, JUnit 5 ve Rest Assured kullanarak lokal çalışan Ollama servisinin native API endpoint'leri test edilir.
+Bu proje, **Yazılım Test Mühendisliği** dersi için hazırlanmış otomatik bir API regresyon test projesidir. Proje, lokalde çalışan Ollama servisinin native API uçlarını (endpoint) Java 17, Maven, JUnit 5 ve Rest Assured kullanarak test eder.
 
-Projenin odağı, LLM çıktılarının doğal değişkenliğini dikkate alan, çalıştırılabilir ve sunumda gösterilebilir bir test paketi oluşturmaktır. Bu nedenle testler model cevabının anlamını değil; HTTP durum kodu, JSON yapısı, alan varlığı, tipler ve cevap süresi gibi yapısal özellikleri doğrular.
+> 💡 **Sunum Dosyası:** Proje kapsamında hazırlanan *"Test Mühendisliğinde Etkili Promptlar"* sunumuna [`docs/presentation/YasinEkici_Test_Müh_Etkili_Promptlar.pdf`](docs/presentation/YasinEkici_Test_Müh_Etkili_Promptlar.pdf) yolundan ulaşabilirsiniz.
 
-## Architecture
+---
 
-Test paketi tek modüllü bir Maven projesidir. Bu projede ayrı bir üretim uygulaması yoktur; repository'nin kendisi API test suite olarak tasarlanmıştır. Ortak Rest Assured ayarları, endpoint sabitleri, konfigürasyon okuyucu ve request/response POJO sınıfları `src/test/java/com/example/ollamatests/` altında tutulur; endpoint testleri ise `tags`, `generate` ve `chat` paketlerinde ayrılır.
+## 🎯 Proje Odağı ve Test Stratejisi
 
-Daha ayrıntılı klasör ve sorumluluk açıklaması için [project_structure.md](project_structure.md) dosyasına bakılabilir. Not: Mevcut uygulamada helper ve model sınıfları test scope içinde tutulur; bu tercih Rest Assured bağımlılığının test scope kalması için yapılmıştır.
+LLM (Büyük Dil Modeli) çıktılarının doğal değişkenliği (non-determinism) nedeniyle, bu projede geleneksel "anlamsal eşleşme" (semantic matching) yerine **yapısal test stratejisi** izlenmiştir.
 
-Temel yapı:
+Testler model cevabının "ne anlama geldiğini" değil;
+- ✅ HTTP durum kodu doğruluklarını,
+- ✅ JSON yapısını ve alan (field) varlıklarını,
+- ✅ Veri tiplerini ve sayısal eşikleri,
+- ✅ Cevap süresi (timeout) limitlerini kontrol eder.
+
+*Daha stabil sonuçlar almak için isteklerde `stream: false`, `temperature: 0` ve `seed: 42` parametreleri kullanılır.*
+
+---
+
+## 🏗️ Mimari ve Dizin Yapısı
+
+Bu repository, ayrı bir üretim (production) kodu barındırmayan, tamamen test odaklı tek modüllü bir Maven projesidir. Test sınıflarının karmaşıklığını azaltmak için ortak ayarlar, konfigürasyon okuyucular ve request/response POJO'ları yardımcı paketlere ayrılmıştır. Detaylı bilgi için [project_structure.md](project_structure.md) dosyasını inceleyebilirsiniz.
 
 ```text
 src/test/java/com/example/ollamatests/
-├── BaseTest.java
-├── client/
-│   ├── Endpoints.java
-│   └── OllamaSpecs.java
-├── config/
-│   └── TestConfig.java
-├── model/
-│   ├── chat/
-│   ├── generate/
-│   └── tags/
-├── chat/
-├── generate/
-└── tags/
+├── BaseTest.java          # Rest Assured ve ortam hazırlığı
+├── client/                # Endpoint sabitleri ve Spec builder'lar
+├── config/                # Environment ve property okuyucuları
+├── model/                 # Request & Response POJO nesneleri
+├── tags/                  # GET /api/tags testleri
+├── generate/              # POST /api/generate testleri
+└── chat/                  # POST /api/chat testleri
 ```
 
-Test edilen endpoint'ler:
+---
 
-- `GET /api/tags`
-- `POST /api/generate`
-- `POST /api/chat`
+## ⚙️ Gereksinimler ve Kurulum
 
-## Requirements
+Projeyi kendi ortamınızda çalıştırmak için aşağıdaki araçların kurulu olması gerekir:
 
-Projeyi çalıştırmak için aşağıdaki araçlar gerekir:
+- **Java 17** veya üzeri
+- **Maven 3.9** veya üzeri
+- **Ollama** ([İndir](https://ollama.com))
 
-- Java 17
-- Maven 3.9 veya üzeri
-- Ollama
-- Lokal olarak indirilmiş `qwen2.5:0.5b` modeli
-
-Ollama kurulumu için resmi site: <https://ollama.com>
-
-Rest Assured dokümantasyonu: <https://rest-assured.io/>
-
-## Setup
-
-Önce Ollama servisinin çalıştığından ve test modelinin indirildiğinden emin olun:
-
+### 1. Ollama ve Modelin Hazırlanması
+Terminali açın ve `qwen2.5:0.5b` modelini indirip servisi başlatın:
 ```bash
-# Ollama
 ollama serve
 ollama pull qwen2.5:0.5b
 ```
 
-Ardından projeyi klonlayıp testleri çalıştırın:
-
+### 2. Projenin Çalıştırılması
 ```bash
-# Project
 git clone <repo-url>
 cd ollama-api-tests
 mvn clean test
 ```
 
-Varsayılan konfigürasyon lokal Ollama adresini kullanır:
+---
 
-```text
-http://localhost:11434
-```
+## 🔧 Konfigürasyon
 
-## Configuration
-
-Varsayılan değerler `src/test/resources/test-config.properties` dosyasında tutulur:
+Test paketi, URL ve model bilgilerini dinamik olarak yönetir. Varsayılan konfigürasyon, sistemi `http://localhost:11434` adresinde arar.
+Ayarlar `src/test/resources/test-config.properties` içindedir:
 
 ```properties
 ollama.base.url=http://localhost:11434
@@ -85,106 +77,46 @@ ollama.test.model=qwen2.5:0.5b
 ollama.timeout.ms=60000
 ```
 
-Konfigürasyon çözümleme sırası:
-
-1. Sistem property
-2. Environment variable
-3. `test-config.properties`
-4. Hardcoded default
-
-Desteklenen environment variable değerleri:
-
+Eğer uzak bir Ollama sunucusu kullanacaksanız, Ortam Değişkenleri (Environment Variables) ile bu ayarları ezebilirsiniz:
 ```bash
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_TEST_MODEL=qwen2.5:0.5b
-OLLAMA_TIMEOUT_MS=60000
+# Linux/macOS
+OLLAMA_BASE_URL=http://192.168.1.50:11434 mvn clean test
+
+# Windows PowerShell
+$env:OLLAMA_BASE_URL="http://192.168.1.50:11434"
+mvn clean test
 ```
 
-Örnek:
+---
 
-```bash
-OLLAMA_BASE_URL=http://192.168.1.50:11434 mvn test
-```
+## 🚀 Testleri Koşma (Maven Profilleri)
 
-Windows PowerShell örneği:
+Projede testler JUnit 5 `@Tag` notasyonlarıyla `smoke` ve `regression` olarak ikiye ayrılmıştır. Toplam 22 test (3 smoke, 19 regression senaryosu) mevcuttur.
 
-```powershell
-$env:OLLAMA_BASE_URL="http://localhost:11434"
-mvn test
-```
-
-## Running Tests
-
-Tüm testleri çalıştırmak için:
-
+**Tüm Testleri Koşmak (Varsayılan):**
 ```bash
 mvn clean test
 ```
 
-Smoke testleri çalıştırmak için:
-
+**Sadece Smoke Testleri (Hızlı Kontrol):**
 ```bash
 mvn test -Dgroups=smoke
 ```
 
-Regression testleri çalıştırmak için:
-
+**Sadece Regression Testleri (Derinlemesine Kontrol):**
 ```bash
 mvn test -Dgroups=regression
 ```
 
-Tek bir test sınıfını çalıştırmak için:
-
+**Belirli Bir Test Sınıfını Koşmak:**
 ```bash
 mvn test -Dtest=GenerateApiTest
 ```
 
-Mevcut test dağılımı:
+---
 
-- Smoke: 3 test, her endpoint için bir temel test
-- Regression: 22 test, tüm pozitif ve negatif senaryolar
-- Default `mvn test`: 22 test
+## ⚠️ Bilinen Kısıtlamalar (Limitations)
 
-Test sınıfları:
-
-- `TagsApiTest`
-- `GenerateApiTest`
-- `GenerateNegativeTest`
-- `ChatApiTest`
-- `ChatNegativeTest`
-
-## Test Strategy
-
-LLM cevapları aynı prompt ile bile ortam, model sürümü ve çalışma zamanı koşullarına göre değişebilir. Bu nedenle testler semantik içerik doğrulaması yapmaz; örneğin model cevabının belirli bir cümleyi içerdiği varsayılmaz.
-
-Kullanılan doğrulama tipleri:
-
-- HTTP status code kontrolü
-- JSON alanlarının varlığı ve tipi
-- Response body içinde yapısal alan kontrolleri
-- Sayısal eşik kontrolleri
-- Cevap süresi kontrolleri
-- POJO deserialize kontrolleri
-
-`generate` ve `chat` isteklerinde değişkenliği azaltmak için her geçerli request aşağıdaki ayarlarla gönderilir:
-
-```json
-{
-  "stream": false,
-  "options": {
-    "temperature": 0,
-    "seed": 42
-  }
-}
-```
-
-Negatif testlerde HTTP status code ve hata body yapısı genel REST beklentilerine göre varsayılmamıştır. Önce Ollama'nın gerçek cevabı gözlemlenmiş, sonra assertion'lar bu gerçek davranışa göre sıkılaştırılmıştır.
-
-## Known Limitations
-
-- Testler canlı lokal Ollama servisine bağlıdır; servis çalışmıyorsa testler geçmez.
-- `qwen2.5:0.5b` modeli lokal makinede indirilmiş olmalıdır.
-- LLM çıktıları tamamen deterministik değildir; testler bu yüzden anlam doğrulaması yapmaz.
-- Cevap süreleri makine donanımına, model yükleme durumuna ve Ollama çalışma koşullarına göre değişebilir.
-- Streaming testleri kapsam dışıdır; tüm request'lerde `stream: false` kullanılır.
-- OpenAI uyumlu `/v1/...` endpoint'leri ve embedding endpoint'leri bu proje kapsamında test edilmez.
+- **Canlı Servis Bağımlılığı:** Testler mock (sahte) verilere değil, canlı Ollama servisine atılır. Servis kapalıysa testler fail olur.
+- **Model Bağımlılığı:** Gecikmeleri (latency) düşük tutmak adına küçük bir model olan `qwen2.5:0.5b` hedeflenmiştir. Farklı model kullanmak isterseniz property dosyasını güncellemelisiniz.
+- **Kapsam:** Streaming asenkron okuma gerektirdiği için kapsam dışıdır. Ayrıca OpenAI uyumlu endpoint'ler (`/v1/`) projeye dahil edilmemiştir.
