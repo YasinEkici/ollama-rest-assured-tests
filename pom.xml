@@ -72,6 +72,7 @@
                 <version>${surefire.version}</version>
                 <configuration>
                     <groups>${groups}</groups>
+                    <trimStackTrace>true</trimStackTrace>
                 </configuration>
             </plugin>
         </plugins>

@@ -35,7 +35,7 @@ class ChatNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.CHAT);
 
-        System.out.printf("emptyMessages status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("emptyMessages status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(200, response.statusCode());
         response.then()
@@ -58,7 +58,7 @@ class ChatNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.CHAT);
 
-        System.out.printf("invalidRole status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("invalidRole status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(200, response.statusCode());
         response.then()
@@ -80,7 +80,7 @@ class ChatNegativeTest extends BaseTest {
                 .when()
                 .post(Endpoints.CHAT);
 
-        System.out.printf("missingModel status=%d body=%s%n", response.statusCode(), response.asString());
+        System.out.printf("missingModel status=%d body=%s%n", response.statusCode(), truncateBody(response.asString()));
 
         assertEquals(400, response.statusCode());
         response.then()
